@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "Subscription-Billing-and-Payment-management-App"
+    }
+  },
+  "defaultProject": "Subscription-Billing-and-Payment-management-App",
+  "cli": {
+    "analytics": false
+  }
 }
