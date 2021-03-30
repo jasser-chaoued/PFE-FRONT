@@ -9,22 +9,19 @@ import { JwtHelperService } from "@auth0/angular-jwt";
   providedIn: 'root'
 })
 export class AuthenticationService {
-
-  private host = environment.apiUrl;
+  public host = environment.apiUrl;
   private token: string;
   private loggedInUsername: string;
   private jwtHelper = new JwtHelperService();
 
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  public login(user: User): Observable<HttpResponse<any> | HttpErrorResponse> {
-    return this.http.post<HttpResponse<any> | HttpErrorResponse>(`${this.host}/user/login`, user, { observe: 'response' });
+  public login(user: User): Observable<HttpResponse<User>> {
+    return this.http.post<User>(`${this.host}/user/login`, user, { observe: 'response' });
   }
 
-
-  public register(user: User): Observable<User | HttpErrorResponse> {
-    return this.http.post<User | HttpErrorResponse>(`${this.host}/user/register`, user, { observe: 'response' });
+  public register(user: User): Observable<User> {
+    return this.http.post<User>(`${this.host}/user/register`, user);
   }
 
   public logOut(): void {
@@ -36,7 +33,7 @@ export class AuthenticationService {
   }
 
   public saveToken(token: string): void {
-    this.token = null;
+    this.token = token;
     localStorage.setItem('token', token);
   }
 
@@ -51,15 +48,16 @@ export class AuthenticationService {
   public loadToken(): void {
     this.token = localStorage.getItem('token');
   }
+
   public getToken(): string {
     return this.token;
   }
 
-  public isLoggedIn(): boolean {
+  public isUserLoggedIn(): boolean {
     this.loadToken();
-    if (this.token != null && this.token !== '') {
+    if (this.token != null && this.token !== ''){
       if (this.jwtHelper.decodeToken(this.token).sub != null || '') {
-        if (this.jwtHelper.isTokenExpired(this.token)) {
+        if (!this.jwtHelper.isTokenExpired(this.token)) {
           this.loggedInUsername = this.jwtHelper.decodeToken(this.token).sub;
           return true;
         }
@@ -68,7 +66,7 @@ export class AuthenticationService {
       this.logOut();
       return false;
     }
-    return;
   }
+
 
 }
