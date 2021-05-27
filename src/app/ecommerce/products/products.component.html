@@ -1,0 +1,45 @@
+
+
+<div class="form-group">
+   <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="filterTerm">
+ </div>
+
+<div class="row card-deck">
+    <div class="col-lg-4 col-md-6 mb-4" *ngFor="let order of productOrders | filter:filterTerm">
+        <div class="card text-center">
+            <div class="card-header">
+                <h4>{{order.product.name}}</h4>
+            </div>
+            <div class="card-body">
+                <a href="#"><img class="card-img-top" src={{order.product.imageUrl}} alt=""></a>
+                <h5 class="card-title">${{order.product.price}}</h5>
+                <div class="row">
+                    <div class="col-4 padding-0" *ngIf="!isProductSelected(order.product)">
+                        <input [hidden]="!isLoggedIn " type="number" min="0" class="form-control" [(ngModel)]=order.quantity>
+                    </div>
+                    <div class="col-4 padding-0" *ngIf="!isProductSelected(order.product)">
+                        <button [hidden]="!isLoggedIn" class="btn btn-primary" (click)="addToCart(order)" [disabled]="order.quantity <= 0">Add
+                            To Cart
+                            <i class="fa fa-cart-plus"></i>
+                        </button>
+                    </div>
+                    <div class="col-12" *ngIf="isProductSelected(order.product)">
+                        <button [hidden]="!isLoggedIn " class="btn btn-primary btn-block" (click)="removeFromCart(order)">Remove From Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
+    <!-- Notification for no Products -->
+    <div *ngIf="products?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+    <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">NO ProductS!</h4>
+      <p>No Products were found.</p>
+    </div>
+    </div>
+  

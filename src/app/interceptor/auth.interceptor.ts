@@ -18,10 +18,10 @@ export class AuthInterceptor implements HttpInterceptor {
     if (httpRequest.url.includes(`${this.authenticationService.host}/user/login`)) {
       return httpHandler.handle(httpRequest);
     }
-    if (httpRequest.url.includes(`${this.authenticationService.host}/user/register`)) {
+    if (httpRequest.url.includes(`${this.authenticationService.host}/products`)) {
       return httpHandler.handle(httpRequest);
     }
-    if (httpRequest.url.includes(`${this.authenticationService.host}/user/resetPassword`)) {
+    if (httpRequest.url.includes(`${this.authenticationService.host}/user/register`)) {
       return httpHandler.handle(httpRequest);
     }
 

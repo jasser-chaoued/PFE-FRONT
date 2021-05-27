@@ -183,7 +183,7 @@ export class UserComponent implements OnInit {
 
   public onLogOut(): void {
     this.authenticationService.logOut();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/home']);
     this.sendNotification(NotificationType.SUCCESS, `You've been successfully logged out`);
   }
 
@@ -205,7 +205,7 @@ export class UserComponent implements OnInit {
     );
   }
 
-  public onDeleteUder(username: string): void {
+  public onDeleteUser(username: string): void {
     this.subscriptions.push(
       this.userService.deleteUser(username).subscribe(
         (response: CustomHttpResponse) => {

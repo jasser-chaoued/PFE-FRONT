@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  stripe: 'pk_test_51IuQ3bEWWeT3KBsDA6rnHdOHnXd5mMSwiVbdtNlJCabItx0JcKygNbkrXDixXZ0g3rbqlW4Gl6lR8AqoEDSs1ZCo008atA8ggq',
   apiUrl: 'http://localhost:8081'
 };
 

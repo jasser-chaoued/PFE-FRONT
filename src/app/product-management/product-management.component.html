@@ -1,0 +1,138 @@
+
+
+
+<div class="container" id="main-container">
+   <div>
+      <div class="btn-group mr-2">
+        <form class="form-inline my-2 my-lg-0 justify-content-center">
+          <input class="form-control mr-sm-2"  type="search" placeholder="Search products..." [(ngModel)]="filterTerm" name="filter">
+       </form>
+        <button [hidden]="!isAdmin" type="button" class="btn" data-toggle="modal" data-target="#addproductModal">
+          <i class="fa fa-plus"></i>New Product
+        </button>
+      </div>
+      <div><br></div>
+    <div class="row">
+      <div *ngFor="let Product of products | filter:filterTerm " class="col-md-6 col-xl-3">
+         <div class="card m-b-30">
+            <div class="card-body row">
+               <div class="col-6">
+                  <a href=""><img src="{{Product?.imageUrl}}" alt="" class="img-fluid rounded-circle w-60"></a>
+               </div>
+               <div class="col-6 card-title align-self-center mb-0">
+                  <h5>{{Product?.name}}</h5>
+                  <p class="m-0">{{Product?.price}}</p>
+               </div>
+            </div>
+            <ul class="list-group list-group-flush">
+               <li class="list-group-item"><i class="fa fa-envelope float-right"></i>{{Product?.description}}</li>
+            </ul>
+            <div class="card-body">
+               <div class="float-right btn-group btn-group-sm">
+                  <a (click)="onOpenModal(Product, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                  <a (click)="onOpenModal(Product, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a>
+               </div>
+            </div>
+         </div>
+      </div>
+    </div>
+    
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addproductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+           <div class="modal-header">
+              <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+           </div>
+           <div class="modal-body">
+              <form #addForm="ngForm" (ngSubmit)="onAddProduct(addForm)">
+              <div class="form-group">
+                 <label for="name">Name</label>
+                 <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+              </div>
+              <div class="form-group">
+                 <label for="description">description</label>
+                 <input type="description" ngModel name="description" class="form-control" id="description" placeholder="description" required>
+              </div>
+              <div class="form-group">
+                 <label for="price">price</label>
+                 <input type="text" ngModel name="price" class="form-control" id="price" placeholder="price" required>
+              </div>
+              <div class="form-group">
+                 <label for="phone">Image URL</label>
+                 <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL" required>
+              </div>
+              <div class="modal-footer">
+                 <button type="button" id="add-product-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                 <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
+              </div>
+              </form>
+           </div>
+        </div>
+      </div>
+      </div>
+    
+    <!-- Edit Modal -->
+    <div class="modal fade" id="updateproductModal" tabindex="-1" role="dialog" aria-labelledby="ProductEditModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="updateProductModalLabel">Edit Product {{editProduct?.name}}</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <form #editForm="ngForm">
+                  <div class="form-group">
+                     <label for="name">Name</label>
+                     <input type="text" ngModel="{{editProduct?.name}}" name="name" class="form-control" id="name" aria-describedby="descriptionHelp" placeholder="Name">
+                  </div>
+                  <input type="hidden" ngModel="{{editProduct?.id}}" name="id" class="form-control" id="id" placeholder="productCode">
+                  <input type="hidden" ngModel="{{editProduct?.productCode}}" name="productCode" class="form-control" id="productCode" placeholder="productCode">
+                  <div class="form-group">
+                     <label for="description">description</label>
+                     <input type="description" ngModel="{{editProduct?.description}}" name="description" class="form-control" id="description" placeholder="description">
+                  </div>
+                  <div class="form-group">
+                     <label for="price">price</label>
+                     <input type="text" ngModel="{{editProduct?.price}}" name="price" class="form-control" id="price" placeholder="price">
+                  </div>
+                  <div class="form-group">
+                     <label for="phone">Image URL</label>
+                     <input type="text" ngModel="{{editProduct?.imageUrl}}" name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL">
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Close</button>
+                     <button (click)="onUpdateProduct(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+    </div>
+    
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteproductModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h5 class="modal-title" id="deleteModelLabel">Delete Product</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+               </button>
+            </div>
+            <div class="modal-body">
+               <p>Are you sure you want to delete Product {{deleteProduct?.name}}?</p>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                  <button (click)="onDeleteProduct(deleteProduct?.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
+               </div>
+            </div>
+         </div>
+      </div>
+    </div>
+    </div>
