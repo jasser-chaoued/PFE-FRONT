@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { loadStripe } from '@stripe/stripe-js';
 import { Subscription } from 'rxjs';
 import { EcommerceService } from 'src/app/ecommerce/services/EcommerceService';
+import { User } from 'src/app/model/user';
+import { AuthenticationService } from 'src/app/service/authentication.service';
 import { environment } from 'src/environments/environment';
 import { ProductOrders } from '../models/product-orders.model';
 
@@ -13,7 +15,7 @@ import { ProductOrders } from '../models/product-orders.model';
   styleUrls: ['./orders.component.css']
 })
 export class OrdersComponent implements OnInit {
-
+  user : User;
   orders: ProductOrders;
   total: number;
   paid: boolean;
@@ -25,6 +27,7 @@ export class OrdersComponent implements OnInit {
 
 
   constructor(private ecommerceService: EcommerceService, 
+    private authenticationService : AuthenticationService,
                     private http:HttpClient) {
       this.orders = this.ecommerceService.ProductOrders;
   }
@@ -45,13 +48,13 @@ export class OrdersComponent implements OnInit {
       pr.forEach(element => {
         this.productNames += element.product.name;
         this.quantity += element.quantity;
-        this.price += element.product.price * element.quantity;
+        this.price += element.product.price * 100 * element.quantity;
 
       });
       const payment = {
         name : this.productNames,
         currency: 'usd',
-        amount: this.price,
+        amount: this.price ,
         quantity : this.quantity,
         cancelUrl: 'http://localhost:4200/cancel',
         successUrl: 'http://localhost:4200/success',
@@ -66,9 +69,9 @@ export class OrdersComponent implements OnInit {
             sessionId: data.id,
           });
       });
-
-      console.log(payment);
-      this.ecommerceService.saveOrder(this.orders).subscribe();
+      
+      this.user = this.authenticationService.getUserFromLocalCache();
+      this.ecommerceService.saveOrder(this.orders ).subscribe();
   }
 
   loadTotal() {
